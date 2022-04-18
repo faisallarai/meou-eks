@@ -4,13 +4,19 @@
 
 <a name="One"></a>
 
+## Design
+
+![alt text](https://lucid.app/publicSegments/view/18ea80c3-8e4c-4c31-95b7-27b836c5f01c/image.png)
+
+<a name="Two"></a>
+
 ### Prerequisite:
 
 1. kubectl
 2. awscli
 3. AWS
 
-<a name="Two"></a>
+<a name="Three"></a>
 
 ### Deploy K8s:
 
