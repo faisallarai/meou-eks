@@ -22,15 +22,15 @@
    - `aws_access_key_id = 12345`
    - `aws_secret_access_key = 12345`
 
-1. Create s3 bucket for state management and update the bucket in the version.tf file.
+2. Create s3 bucket for state management and update the bucket in the version.tf file.
 
    - `aws s3api create-bucket --bucket meou-eks --region us-east-1`
 
-1. Create Dynamo Table for lock management and update the dynamodb_table in the version.tf file.
+3. Create Dynamo Table for lock management and update the dynamodb_table in the version.tf file.
 
    - `aws dynamodb create-table --table-name MeouCollection --attribute-definitions AttributeName=LockID,AttributeType=S --key-schema AttributeName=LockID,KeyType=HASH --provisioned-throughput ReadCapacityUnits=1,WriteCapacityUnits=1`
 
-1. Create testing.tfvars and add the ff.
+4. Create testing.tfvars and add the ff.
 
    - `region = us-east-2`
    - `vpc_name = eks_vpc`
@@ -46,7 +46,7 @@
    - `fargate_profile_name=eks_fargate`
    - `kubernetes_namespace = meou-system`
 
-1. Run Terraform Commands.
+5. Run Terraform Commands.
 
    - `cd meou-eks `
    - `terraform init`
@@ -54,6 +54,6 @@
    - `terraform workspace select testing`
    - `terraform apply -var-file=testing.tfvars`
 
-1. Update Kubectl Config.
+6. Update Kubectl Config.
 
    - `aws eks --region us-east-2 update-kubeconfig --name eks_cluster-testing`
