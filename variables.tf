@@ -54,3 +54,18 @@ variable "kubernetes_namespace" {
     type = string
     description = "Kubernetes namespace for selection"
 }
+
+variable "app_namespace" {
+    type = string
+    description = "App namespace for selection"
+}
+
+variable "app_labels" {
+    type = map
+    description = "List of the labels for Apps Deployment"
+}
+
+variable "efs_replicas" {
+    type = string
+    description = "Number of replicas for the Deployment"
+}

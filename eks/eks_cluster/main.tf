@@ -1,5 +1,5 @@
-resource "aws_iam_role" "eks_cluster" {
-  name = "eks-cluster"
+resource "aws_iam_role" "eks_cluster_role" {
+  name = "${var.cluster_name}-cluster-role"
 
   assume_role_policy = <<POLICY
 {
@@ -19,18 +19,19 @@ POLICY
 
 resource "aws_iam_role_policy_attachment" "AmazonEKSClusterPolicy" {
   policy_arn = "arn:aws:iam::aws:policy/AmazonEKSClusterPolicy"
-  role       = aws_iam_role.eks_cluster.name
+  role       = aws_iam_role.eks_cluster_role.name
 }
 
 resource "aws_iam_role_policy_attachment" "AmazonEKSServicePolicy" {
   policy_arn = "arn:aws:iam::aws:policy/AmazonEKSServicePolicy"
-  role       = aws_iam_role.eks_cluster.name
+  role       = aws_iam_role.eks_cluster_role.name
 }
 
 resource "aws_eks_cluster" "eks_cluster" {
   name     = "${var.cluster_name}-${terraform.workspace}"
   enabled_cluster_log_types = ["api", "audit", "authenticator","controllerManager","scheduler"]
-  role_arn = aws_iam_role.eks_cluster.arn
+  role_arn = aws_iam_role.eks_cluster_role.arn
+  version  = "1.22"
 
   vpc_config {
     #endpoint_private_access = true

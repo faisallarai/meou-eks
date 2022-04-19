@@ -37,7 +37,7 @@ resource "aws_eks_fargate_profile" "main" {
   }
 
   selector {
-    namespace = var.kubernetes_namespace
+    namespace = var.app_namespace
   }
 
   selector {

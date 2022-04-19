@@ -16,3 +16,8 @@ variable "kubernetes_namespace" {
     type = string
     description = "Kubernetes namespace for selection"
 }
+
+variable "app_namespace" {
+    type = string
+    description = "Name of the App Namespace"
+}

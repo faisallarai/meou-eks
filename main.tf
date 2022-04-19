@@ -31,6 +31,7 @@ module "fargate" {
   fargate_profile_name    = var.fargate_profile_name
   subnet_ids              = module.network.aws_subnets_private
   kubernetes_namespace    = var.kubernetes_namespace
+  app_namespace           = var.app_namespace
 }
 
 module "kubernetes" {
@@ -39,8 +40,13 @@ module "kubernetes" {
   vpc_id                = module.network.vpc_id
   vpc_cidr              = var.vpc_cidr
   efs_subnet_ids        = module.network.aws_subnets_private
+  eks_cluster_id        = module.eks_cluster.eks_cluster_id
   eks_cluster_name      = module.eks_cluster.cluster_name
   eks_cluster_endpoint  = module.eks_cluster.endpoint
   eks_oidc_url          = module.eks_cluster.oidc_url
   eks_ca_certificate    = module.eks_cluster.ca_certificate
+  kubernetes_namespace  = var.kubernetes_namespace
+  app_namespace         = var.app_namespace
+  app_labels            = var.app_labels
+  efs_replicas          = var.efs_replicas
 }

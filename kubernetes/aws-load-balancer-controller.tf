@@ -1,7 +1,7 @@
 data "aws_caller_identity" "current" {}
 
 data "http" "iam_policy" {
-  url = "https://raw.githubusercontent.com/kubernetes-sigs/aws-load-balancer-controller/v2.1.0/docs/install/iam_policy.json"
+  url = "https://raw.githubusercontent.com/kubernetes-sigs/aws-load-balancer-controller/main/docs/install/iam_policy.json"
   request_headers = {
     Accept = "application/json"
   }
@@ -44,7 +44,7 @@ resource "kubernetes_service_account" "load_balancer_Controller" {
   automount_service_account_token = true
   metadata {
     name      = "aws-load-balancer-controller"
-    namespace = "kube-system"
+    namespace = var.kubernetes_namespace
     annotations = {
       "eks.amazonaws.com/role-arn" = aws_iam_role.eks_lb_controller.arn
     }
@@ -102,4 +102,37 @@ resource "kubernetes_cluster_role_binding" "load_balancer_Controller" {
     namespace = kubernetes_service_account.load_balancer_Controller.metadata[0].namespace
   }
   depends_on = [ kubernetes_cluster_role.load_balancer_Controller ]
+}
+
+
+resource "helm_release" "using_iamserviceaccount" {
+  name       = "aws-load-balancer-controller"
+  repository = "https://aws.github.io/eks-charts"
+  chart      = "aws-load-balancer-controller"
+  version    = "1.4.1"
+  namespace  = var.kubernetes_namespace
+  atomic     = true
+  verify     = false
+
+  set {
+    name  = "clusterName"
+    value = var.eks_cluster_name
+  }
+  set {
+    name  = "serviceAccount.create"
+    value = "false"
+  }
+  set {
+    name  = "serviceAccount.name"
+    value = "aws-load-balancer-controller"
+  }
+  set {
+    name  = "region"
+    value = var.region
+  }
+  set {
+    name  = "vpcId"
+    value = var.vpc_id
+  }
+  depends_on = [kubernetes_cluster_role_binding.load_balancer_Controller]
 }
