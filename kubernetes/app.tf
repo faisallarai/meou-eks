@@ -5,12 +5,3 @@ resource "kubernetes_namespace" "namespace" {
   }
 }
 
-resource "kubernetes_namespace" "argo_cd" {
-  metadata {
-    name = "argocd"
-    labels = {
-      "name" = "arogcd"
-    }
-  }
-}
-

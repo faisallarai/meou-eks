@@ -104,7 +104,7 @@ resource "aws_iam_role_policy_attachment" "efs_csi_role_policy_attachment" {
   role       = aws_iam_role.efs_csi_iam_role.name
 }
 
-resource "kubernetes_storage_class" "efs_sc" {
+resource "kubernetes_storage_class_v1" "efs_sc" {
   metadata {
     name = "efs-sc"
   }
@@ -112,8 +112,8 @@ resource "kubernetes_storage_class" "efs_sc" {
   parameters = {
     type = "pd-standard"
     provisioning_mode = "efs-ap"
-    file_system_id = "aws_efs_file_system.efs.id"
-    directory_perms = 700
+    file_system_id = aws_efs_file_system.efs.id
+    directory_perms = "700"
   }
 }
 
@@ -583,7 +583,6 @@ resource "kubernetes_daemonset" "efs_csi_node" {
   }
 }
 
-
 resource "kubernetes_csi_driver_v1" "efs_csi_aws_com" {
   metadata {
     annotations = {
@@ -597,4 +596,92 @@ resource "kubernetes_csi_driver_v1" "efs_csi_aws_com" {
   spec {
     attach_required        = false
   }
+}
+
+resource "kubernetes_persistent_volume_v1" "efs_pv_0" {
+  metadata {
+    name = "efs-pv-0"
+  }
+  spec {
+    capacity = {
+      storage = "5Gi"
+    }
+    volume_mode = "Filesystem"
+    access_modes = ["ReadWriteMany"]
+    persistent_volume_reclaim_policy = "Retain"
+    storage_class_name = "efs-sc"
+    persistent_volume_source {
+      csi {
+        driver = "efs.csi.aws.com"
+        volume_handle = aws_efs_file_system.efs.id
+      }
+    }
+  }
+  # depends_on = [ kubernetes_storage_class.efs_sc ]
+}
+
+resource "kubernetes_persistent_volume_v1" "efs_pv_1" {
+  metadata {
+    name = "efs-pv-1"
+  }
+  spec {
+    capacity = {
+      storage = "5Gi"
+    }
+    volume_mode = "Filesystem"
+    access_modes = ["ReadWriteMany"]
+    persistent_volume_reclaim_policy = "Retain"
+    storage_class_name = "efs-sc"
+    persistent_volume_source {
+      csi {
+        driver = "efs.csi.aws.com"
+        volume_handle = aws_efs_file_system.efs.id
+      }
+    }
+  }
+  # depends_on = [ kubernetes_storage_class.efs_sc ]
+}
+
+resource "kubernetes_persistent_volume_v1" "efs_pv_2" {
+  metadata {
+    name = "efs-pv-2"
+  }
+  spec {
+    capacity = {
+      storage = "5Gi"
+    }
+    volume_mode = "Filesystem"
+    access_modes = ["ReadWriteMany"]
+    persistent_volume_reclaim_policy = "Retain"
+    storage_class_name = "efs-sc"
+    persistent_volume_source {
+      csi {
+        driver = "efs.csi.aws.com"
+        volume_handle = aws_efs_file_system.efs.id
+      }
+    }
+  }
+  # depends_on = [ kubernetes_storage_class.efs_sc ]
+}
+
+resource "kubernetes_persistent_volume_v1" "efs_pv_3" {
+  metadata {
+    name = "efs-pv-3"
+  }
+  spec {
+    capacity = {
+      storage = "5Gi"
+    }
+    volume_mode = "Filesystem"
+    access_modes = ["ReadWriteMany"]
+    persistent_volume_reclaim_policy = "Retain"
+    storage_class_name = "efs-sc"
+    persistent_volume_source {
+      csi {
+        driver = "efs.csi.aws.com"
+        volume_handle = aws_efs_file_system.efs.id
+      }
+    }
+  }
+  # depends_on = [ kubernetes_storage_class.efs_sc ]
 }
